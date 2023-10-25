@@ -1,6 +1,7 @@
 package linkedList
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -33,24 +34,31 @@ func (l *LinkedList) Add(val int) {
 	newNode.next = &node{val: val}
 }
 
-func (l *LinkedList) Pop() {
+func (l *LinkedList) Pop() error {
 	newNode := l.head
+	if newNode == nil {
+		return errors.New("list is empty")
+	}
 	if newNode.next == nil {
 		l.head = nil
-		return
+		return nil
 	}
 	for newNode.next.next != nil {
 		newNode = newNode.next
 	}
 	newNode.next = nil
+	return nil
 }
 
-func (l *LinkedList) At(pos int) int {
+func (l *LinkedList) At(pos int) (int, error) {
 	newNode := l.head
+	if newNode == nil {
+		return 0, errors.New("list is empty")
+	}
 	for i := 0; i < pos; i++ {
 		newNode = newNode.next
 	}
-	return newNode.val
+	return newNode.val, nil
 }
 
 func (l *LinkedList) Size() int {
@@ -66,20 +74,24 @@ func (l *LinkedList) Size() int {
 	return count
 }
 
-func (l *LinkedList) DeleteFrom(pos int) {
+func (l *LinkedList) DeleteFrom(pos int) error {
+	if l.head == nil {
+		return errors.New("list is empty")
+	}
 	if pos == 0 {
 		if l.head.next == nil {
 			l.head = nil
 		} else {
 			l.head = l.head.next
 		}
-		return
+		return nil
 	}
 	newNode := l.head
 	for i := 1; i < pos; i++ {
 		newNode = newNode.next
 	}
 	newNode.next = newNode.next.next
+	return nil
 }
 
 func (l *LinkedList) UpdateAt(pos, val int) {
